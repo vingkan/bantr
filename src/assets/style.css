@@ -1,0 +1,19 @@
+.ReactionBar {
+    display: none;
+}
+
+.MessageTile:hover .ReactionBar {
+    display: inline-block;
+}
+
+.MessageTile:hover {
+    cursor: pointer;
+}
+
+.ReactionBar {
+    cursor: pointer;
+}
+
+.ReactionButton {
+    display: inline-block;
+}

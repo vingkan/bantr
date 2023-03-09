@@ -1,3 +1,5 @@
+/* global localStorage */
+
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -12,22 +14,25 @@ import { signInUser, useCurrentAuthUser } from '../app/authentication'
 export default function HomePage() {
     const db = getDatabase()
 
+    // TODO: Create and join rooms by code.
+    localStorage.setItem('bantr__room', '9417')
+    const roomId = localStorage.getItem('bantr__room')
+
     const authUser = useCurrentAuthUser()
     const uid = authUser?.uid
     
     const [user, setUser] = useState({})
-    const name = user?.name
+    const name = user?.name || ''
 
     useEffect(() => {
         const userRef = ref(db, `user/${uid}`)
         onValue(userRef, async (snap) => {
             const userVal = snap.val()
-            console.log({userVal})
             setUser(userVal)
         })
     }, [uid])
 
-    const [userName, setUserName] = useState()
+    const [userName, setUserName] = useState('')
 
     useEffect(() => {
         setUserName(name)
@@ -44,8 +49,11 @@ export default function HomePage() {
         const result = await signInUser()
         const resultUid = result?.user?.uid
         const userNameOrDefault = userName || 'Untitled User'
-        const userNameRef = ref(db, `user/${resultUid}/name`)
-        await set(userNameRef, userNameOrDefault)
+        const userNameRef = ref(db, `user/${resultUid}`)
+        await set(userNameRef, {
+            name: userNameOrDefault,
+            room: roomId,
+        })
     }
 
     return (
