@@ -1,0 +1,44 @@
+name: GitHub Pages Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install Node.js 🔋
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Build Static Website 💻
+        env:
+          VITE_firebase_apiKey: ${{ secrets.VITE_FIREBASE_APIKEY }}
+          VITE_firebase_authDomain: ${{ secrets.VITE_FIREBASE_AUTHDOMAIN }}
+          VITE_firebase_projectId: ${{ secrets.VITE_FIREBASE_PROJECTID }}
+          VITE_firebase_storageBucket: ${{ secrets.VITE_FIREBASE_STORAGEBUCKET }}
+          VITE_firebase_messagingSenderId: ${{ secrets.VITE_FIREBASE_MESSAGINGSENDERID }}
+          VITE_firebase_appId: ${{ secrets.VITE_FIREBASE_APPID }}
+        run: |
+          echo "VITE_firebase_apiKey=$VITE_firebase_apiKey" >> .env
+          echo "VITE_firebase_authDomain=$VITE_firebase_authDomain" >> .env
+          echo "VITE_firebase_projectId=$VITE_firebase_projectId" >> .env
+          echo "VITE_firebase_storageBucket=$VITE_firebase_storageBucket" >> .env
+          echo "VITE_firebase_messagingSenderId=$VITE_firebase_messagingSenderId" >> .env
+          echo "VITE_firebase_appId=$VITE_firebase_appId" >> .env
+          npm install
+          npm run build
+          touch bantr/.nojekyll
+          rm .env
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: bantr # The folder the action should deploy.
