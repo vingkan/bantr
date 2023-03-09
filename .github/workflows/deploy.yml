@@ -26,16 +26,15 @@ jobs:
           VITE_firebase_messagingSenderId: ${{ secrets.VITE_FIREBASE_MESSAGINGSENDERID }}
           VITE_firebase_appId: ${{ secrets.VITE_FIREBASE_APPID }}
         run: |
-          echo "VITE_firebase_apiKey=$VITE_firebase_apiKey" >> .env
-          echo "VITE_firebase_authDomain=$VITE_firebase_authDomain" >> .env
-          echo "VITE_firebase_projectId=$VITE_firebase_projectId" >> .env
-          echo "VITE_firebase_storageBucket=$VITE_firebase_storageBucket" >> .env
-          echo "VITE_firebase_messagingSenderId=$VITE_firebase_messagingSenderId" >> .env
-          echo "VITE_firebase_appId=$VITE_firebase_appId" >> .env
+          echo "VITE_firebase_apiKey=$VITE_firebase_apiKey" >> $GITHUB_ENV
+          echo "VITE_firebase_authDomain=$VITE_firebase_authDomain" >> $GITHUB_ENV
+          echo "VITE_firebase_projectId=$VITE_firebase_projectId" >> $GITHUB_ENV
+          echo "VITE_firebase_storageBucket=$VITE_firebase_storageBucket" >> $GITHUB_ENV
+          echo "VITE_firebase_messagingSenderId=$VITE_firebase_messagingSenderId" >> $GITHUB_ENV
+          echo "VITE_firebase_appId=$VITE_firebase_appId" >> $GITHUB_ENV
           npm install
           npm run build
           touch bantr/.nojekyll
-          rm .env
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
