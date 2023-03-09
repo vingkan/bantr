@@ -7,6 +7,9 @@ import { FirebaseAppContext, createFirebaseApp } from './app/firebase'
 
 import HomePage from './pages/HomePage'
 import NotFoundPage from './pages/NotFoundPage'
+import MatchPage from './pages/MatchPage'
+import ChatInboxPage from './pages/ChatInboxPage'
+import ChatPage from './pages/ChatPage'
 
 const BASE_URL = '/bantr'
 const REDIRECT_PATHNAME_KEY = 'bantr__pathname'
@@ -26,6 +29,11 @@ function AppRouting() {
     return (
         <Routes>
             <Route index element={<HomePage />} />
+            <Route path="match" element={<MatchPage />} />
+            <Route path="chat">
+                <Route index element={<ChatInboxPage />} />
+                <Route path=":chatId" element={<ChatPage />} />
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )
