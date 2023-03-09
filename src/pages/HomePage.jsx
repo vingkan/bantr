@@ -41,9 +41,10 @@ export default function HomePage() {
     }
 
     const doUpdateUser = async () => {
-        await signInUser()
+        const result = await signInUser()
+        const resultUid = result?.user?.uid
         const userNameOrDefault = userName || 'Untitled User'
-        const userNameRef = ref(db, `user/${uid}/name`)
+        const userNameRef = ref(db, `user/${resultUid}/name`)
         await set(userNameRef, userNameOrDefault)
     }
 
