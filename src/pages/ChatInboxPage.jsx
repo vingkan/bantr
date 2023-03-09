@@ -23,10 +23,8 @@ export default function ChatInboxPage() {
 
     return (
         <div>
-            <div>
-                <h1>Chat Inbox</h1>
-                <p>Chats will appear here.</p>
-            </div>
+            <h2>Chat Inbox</h2>
+            <p>Chats will appear here.</p>
         </div>
     )
 }

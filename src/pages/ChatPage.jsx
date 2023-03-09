@@ -12,56 +12,77 @@ import {
     serverTimestamp,
 } from 'firebase/database'
 
-import { useCurrentAuthUser } from '../app/authentication'
+import { useUser } from '../app/user'
 
 const REACTIONS = {
-    red_flag: '🚩',
     green_heart: '💚',
+    red_flag: '🚩',
     soccer_ball: '⚽',
 }
 
-function ReactionButton({ reactionId, sendReaction }) {
+function ReactionButton({ reactionId, sendReaction, isSet }) {
     const emoji = REACTIONS?.[reactionId]
-    const addReaction = () => sendReaction(reactionId, true)
+    const addReaction = () => sendReaction(reactionId, !isSet)
+    const statusClass = isSet ? 'On' : 'Off'
     return (
-        <div className="ReactionButton">
-            <button onClick={addReaction}>{emoji}</button>
+        <div className={`Reaction ${statusClass}`} onClick={addReaction}>
+            <span>{emoji}</span>
         </div>
     )
 }
 
-function ReactionBar({ sendReaction }) {
+function ReactionBar({ reactions, sendReaction }) {
+    const hasReactions = Object.keys(reactions).length > 0
+    const displayClass = hasReactions ? 'HasReactions' : 'NoReactions'
     const buttons = Object.keys(REACTIONS).map((reactionId) => (
-        <ReactionButton key={reactionId} {...{reactionId, sendReaction}} />
+        <ReactionButton
+            key={reactionId}
+            reactionId={reactionId}
+            sendReaction={sendReaction}
+            isSet={reactions?.[reactionId]}
+        />
     ))
     return (
-        <div className="ReactionBar">
+        <div className={`ReactionBar ${displayClass}`}>
             {buttons}
         </div>
     )
 }
 
-function Reactions({ reactions, sendReaction }) {
+function Reactions({ reactions }) {
     return (
-        <div>{Object.keys(reactions).map((reactionId) => (
+        <div className="Reactions">{Object.keys(reactions).map((reactionId) => (
             <div
+                className="Reaction"
                 key={reactionId}
-                onClick={(e) => sendReaction(reactionId, false)}
             >{REACTIONS?.[reactionId]}</div>
         ))}</div>
     )
 }
 
+function ContentElement({ content }) {
+    const lines = content.split('\n')
+    const els = lines.map((line) => (
+        <p>{line}</p>
+    ))
+    return (
+        <div>{els}</div>
+    )
+}
+
 function MessageTile({ myUid, from, sendReaction, content, reactions }) {
     const maybeReactions = myUid !== from && (
-        <Reactions reactions={reactions} sendReaction={sendReaction} />
+        <Reactions reactions={reactions} />
     )
     const maybeReactionBar = myUid !== from && (
-        <ReactionBar sendReaction={sendReaction} />
+        <ReactionBar reactions={reactions} sendReaction={sendReaction} />
     )
+    const authorClass = myUid === from ? 'MyMessage' : 'TheirMessage'
     return (
         <div className="MessageTile">
-            <div>{content}</div>
+            <div className={`MessageBox ${authorClass}`}>
+                <ContentElement content={content} />
+            </div>
             {maybeReactions}
             {maybeReactionBar}
         </div>
@@ -78,13 +99,14 @@ export default function ChatPage() {
 
     const roomId = localStorage.getItem('bantr__room')
 
-    const user = useCurrentAuthUser()
+    const user = useUser(db)
     const uid = user?.uid
 
     const { chatId } = useParams()
     const otherUid = getOtherUid(chatId, uid)
     
     const [chatUser, setChatUser] = useState({})
+    const theirName = chatUser?.name || 'someone'
     
     useEffect(() => {
         const chatUserRef = ref(db, `user/${otherUid}`)
@@ -168,16 +190,30 @@ export default function ChatPage() {
             {...message}
         />
     ))
+    const noMessages = (
+        <p className="Starter">No messages yet. It's time to banter.</p>
+    )
+    const messageEls = messageTiles.length > 0 ? messageTiles : noMessages
 
     return (
         <div>
-            <div>
-                <h1>Chat</h1>
-                <Link to="/match">Matches</Link>
-                <p>Chatting with {chatUser?.name || 'someone'}.</p>
-                <div>{messageTiles}</div>
-                <textarea onChange={doUpdateContent} value={contentText}></textarea>
-                <button onClick={doSendChat}>Send</button>
+            <h2 className="PageTitle TheirUserName">{theirName}</h2>
+            <Link to="/match" className="BackLink">{'< Back'}</Link>
+            <div className="Chat">
+                <div>{messageEls}</div>
+            </div>
+            <div className="Sender">
+                <textarea
+                    className="SendContent"
+                    onChange={doUpdateContent}
+                    value={contentText}
+                />
+                <button
+                    className="SendButton"
+                    onClick={doSendChat}
+                >
+                    <span>Send</span>
+                </button>
             </div>
         </div>
     )

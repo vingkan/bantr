@@ -11,7 +11,7 @@ import {
     ref,
 } from 'firebase/database'
 
-import { useCurrentAuthUser } from '../app/authentication'
+import { useUser } from '../app/user'
 
 function getChatId(a, b) {
     return a < b ? `${a}~${b}` : `${b}~${a}`
@@ -19,12 +19,15 @@ function getChatId(a, b) {
 
 function MatchTile({ myUid, user }) {
     const chatId = getChatId(myUid, user?.uid)
+    const distance = Math.floor(Math.random() * 8) + 1
     return (
-        <div>
-            <h2>{user?.name || 'No Name Yet'}</h2>
-            <p>7 km away</p>
-            <Link to={`/chat/${chatId}`}>Chat</Link>
-        </div>
+        <Link className="MatchTile" to={`/chat/${chatId}`}>
+            <div className="Teaser">
+                <h3>{user?.name || 'No Name Yet'}</h3>
+                <p>{distance} km away</p>
+            </div>
+            <div className="ChatIcon">Chat</div>
+        </Link>
     )
 }
 
@@ -33,7 +36,7 @@ export default function MatchPage() {
 
     const roomId = localStorage.getItem('bantr__room')
 
-    const user = useCurrentAuthUser()
+    const user = useUser(db)
     const uid = user?.uid
 
     const [userMap, setUserMap] = useState({})
@@ -59,11 +62,8 @@ export default function MatchPage() {
 
     return (
         <div>
-            <div>
-                <h1>Match</h1>
-                <Link to="/">Home</Link>
-                <div>{matchResults}</div>
-            </div>
+            <h2 className="PageTitle">suggestions for you</h2>
+            <div>{matchResults}</div>
         </div>
     )
 }

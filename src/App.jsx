@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 
 import { FirebaseAppContext, createFirebaseApp } from './app/firebase'
 
+import Layout from './pages/Layout'
 import HomePage from './pages/HomePage'
 import NotFoundPage from './pages/NotFoundPage'
 import MatchPage from './pages/MatchPage'
@@ -28,13 +29,15 @@ function AppRouting() {
 
     return (
         <Routes>
-            <Route index element={<HomePage />} />
-            <Route path="match" element={<MatchPage />} />
-            <Route path="chat">
-                <Route index element={<ChatInboxPage />} />
-                <Route path=":chatId" element={<ChatPage />} />
+            <Route element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="match" element={<MatchPage />} />
+                <Route path="chat">
+                    <Route index element={<ChatInboxPage />} />
+                    <Route path=":chatId" element={<ChatPage />} />
+                </Route>
+                <Route path="*" element={<NotFoundPage />} />
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )
 }
