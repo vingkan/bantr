@@ -38,6 +38,7 @@ function AppRouting() {
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )
 }

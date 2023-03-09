@@ -62,8 +62,8 @@ function Reactions({ reactions }) {
 
 function ContentElement({ content }) {
     const lines = content.split('\n')
-    const els = lines.map((line) => (
-        <p>{line}</p>
+    const els = lines.map((line, i) => (
+        <p key={i}>{line}</p>
     ))
     return (
         <div>{els}</div>
@@ -114,7 +114,7 @@ export default function ChatPage() {
             const chatUserVal = snap.val() || {}
             setChatUser(chatUserVal)
         })
-    }, [])
+    }, [otherUid])
     
     const [chatMap, setChatMap] = useState({})
     const chatRef = ref(db, `chat/${chatId}`)
