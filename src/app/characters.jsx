@@ -39,13 +39,12 @@ export function CharacterSelector({ characterId, setCharacterId }) {
             key={character?.id}
             value={character?.id}
             default={character?.id === ''}
-            selected={character?.id === characterId}
         >{character?.name}</option>
     ))
 
     return (
         <div>
-            <select onChange={(e) => setCharacterId(e.target.value)}>
+            <select value={characterId} onChange={(e) => setCharacterId(e.target.value)}>
                 {options}
             </select>
         </div>

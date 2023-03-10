@@ -20,7 +20,7 @@ export default function HomePage() {
     const db = getDatabase()
     const navigateTo = useNavigate()
 
-    const roomId = localStorage.getItem(ROOM_CODE_KEY)
+    const roomId = localStorage.getItem(ROOM_CODE_KEY) || ''
 
     const [roomCode, setRoomCode] = useState(roomId)
 
@@ -45,6 +45,7 @@ export default function HomePage() {
     const user = useUser(db)
     const uid = user?.uid
     const name = user?.name || ''
+    const userRealName = user?.realName || ''
     const chosenCharacter = user?.character
 
     const [userName, setUserName] = useState('')
@@ -52,6 +53,12 @@ export default function HomePage() {
     useEffect(() => {
         setUserName(name)
     }, [name])
+
+    const [realName, setRealName] = useState('')
+
+    useEffect(() => {
+        setRealName(userRealName)
+    }, [userRealName])
 
     const [characterId, setCharacterId] = useState()
 
@@ -68,20 +75,23 @@ export default function HomePage() {
     const doUpdateUser = async () => {
         const result = await signInUser()
         const resultUid = result?.user?.uid
-        const userNameOrDefault = userName || 'Untitled_User'
+        const userNameOrDefault = userName || ''
+        const realNameOrDefault = realName || ''
         const userNameRef = ref(db, `user/${resultUid}`)
         await set(userNameRef, {
             name: userNameOrDefault,
-            room: roomCode,
+            realName: realNameOrDefault,
             character: characterId,
+            room: roomCode,
         })
-        if (roomCode && characterId) {
+        if (userName && realName && roomCode && characterId) {
             navigateTo('/match')
         }
     }
 
-    const noRoomCode = <p>You must enter a room code to play.</p>
-    const noCharacter = <p>You must choose a character to play.</p>
+    const noNames = <p>Enter your real name and screen name.</p>
+    const noRoomCode = <p>Enter a room code to play.</p>
+    const noCharacter = <p>Choose a character to play.</p>
 
     return (
         <div>
@@ -89,10 +99,13 @@ export default function HomePage() {
                 <div className="UserNameForm Center">
                     <p>Room Code:</p>
                     <input type="text" value={roomCode} onChange={doRoomCodeChange} />
-                    <p>User Name:</p>
+                    <p>Your Real Name:</p>
+                    <input type="text" value={realName} onChange={(e) => setRealName(e.target.value)} />
+                    <p>Your Screen Name:</p>
                     <input type="text" value={userName} onChange={doUserNameChange} />
                     <p>Your Character:</p>
                     <CharacterSelector {...{ characterId, setCharacterId, }} />
+                    {(!userName || !realName) && noNames}
                     {!roomCode && noRoomCode}
                     {!characterId && noCharacter}
                     <button
