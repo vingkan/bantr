@@ -57,7 +57,7 @@ export default function MatchPage() {
     const matchTiles = allUsers.filter(user => user.uid !== uid).map((user) => (
         <MatchTile key={user.uid} myUid={uid} user={user} />
     ))
-    const noMatches = <p>No one is nearby.</p>
+    const noMatches = <p className="Center">No one is nearby.</p>
     const matchResults = matchTiles.length > 0 ? matchTiles : noMatches
 
     return (

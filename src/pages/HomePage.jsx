@@ -11,6 +11,7 @@ import {
 } from 'firebase/database'
 
 import { signInUser, useCurrentAuthUser } from '../app/authentication'
+import { CharacterSelector } from '../app/characters'
 import { useUser } from '../app/user'
 
 const ROOM_CODE_KEY = 'bantr__room'
@@ -44,12 +45,19 @@ export default function HomePage() {
     const user = useUser(db)
     const uid = user?.uid
     const name = user?.name || ''
+    const chosenCharacter = user?.character
 
     const [userName, setUserName] = useState('')
 
     useEffect(() => {
         setUserName(name)
     }, [name])
+
+    const [characterId, setCharacterId] = useState()
+
+    useEffect(() => {
+        setCharacterId(chosenCharacter)
+    }, [chosenCharacter])
 
     const doUserNameChange = (e) => {
         const newUserName = e.target.value
@@ -65,13 +73,15 @@ export default function HomePage() {
         await set(userNameRef, {
             name: userNameOrDefault,
             room: roomCode,
+            character: characterId,
         })
-        if (roomCode) {
+        if (roomCode && characterId) {
             navigateTo('/match')
         }
     }
 
     const noRoomCode = <p>You must enter a room code to play.</p>
+    const noCharacter = <p>You must choose a character to play.</p>
 
     return (
         <div>
@@ -81,7 +91,10 @@ export default function HomePage() {
                     <input type="text" value={roomCode} onChange={doRoomCodeChange} />
                     <p>User Name:</p>
                     <input type="text" value={userName} onChange={doUserNameChange} />
+                    <p>Your Character:</p>
+                    <CharacterSelector {...{ characterId, setCharacterId, }} />
                     {!roomCode && noRoomCode}
+                    {!characterId && noCharacter}
                     <button
                         className="PlayButton"
                         onClick={doUpdateUser}
