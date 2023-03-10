@@ -16,10 +16,6 @@ body, button, input, textarea {
 
 /* Layout */
 
-
-
-
-
 h1 {
     font-size: 3em;
 }
@@ -84,6 +80,7 @@ h3 {
 .UserNameForm input {
     width: 75%;
     text-align: center;
+    margin: 0.5em 0;
 }
 
 .UserNameForm button {

@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import MatchPage from './pages/MatchPage'
 import ChatInboxPage from './pages/ChatInboxPage'
 import ChatPage from './pages/ChatPage'
+import ResultsPage from './pages/ResultsPage'
 
 const BASE_URL = '/bantr'
 const REDIRECT_PATHNAME_KEY = 'bantr__pathname'
@@ -36,6 +37,7 @@ function AppRouting() {
                     <Route index element={<ChatInboxPage />} />
                     <Route path=":chatId" element={<ChatPage />} />
                 </Route>
+                <Route path="results" element={<ResultsPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
