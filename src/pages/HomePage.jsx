@@ -12,7 +12,7 @@ import {
 
 import { signInUser, useCurrentAuthUser } from '../app/authentication'
 import { CharacterSelector } from '../app/characters'
-import { useUser } from '../app/user'
+import { useUser, getRoomCodeFromUrl } from '../app/user'
 
 const ROOM_CODE_KEY = 'bantr__room'
 
@@ -25,14 +25,12 @@ export default function HomePage() {
     const [roomCode, setRoomCode] = useState(roomId)
 
     useEffect(() => {
-        const query = document.location.search
-        const codeFromQuery = query?.split('room=')?.[1]?.split('&')?.[0]
+        const codeFromQuery = getRoomCodeFromUrl()
         if (!codeFromQuery) {
             return
         }
-        const cleanRoomCode = codeFromQuery.replace(/[^0-9]/gi, '').substring(0, 8)
-        localStorage.setItem(ROOM_CODE_KEY, cleanRoomCode)
-        setRoomCode(cleanRoomCode)
+        localStorage.setItem(ROOM_CODE_KEY, codeFromQuery)
+        setRoomCode(codeFromQuery)
     }, [])
 
     const doRoomCodeChange = (e) => {

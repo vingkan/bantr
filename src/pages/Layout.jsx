@@ -12,7 +12,7 @@ export default function Layout() {
         <div className="Layout">
             <h3 className="MyUserName">{name}</h3>
             <h1 className="AppTitle">
-                <Link to="/">bantr</Link>
+                <Link to="/match">bantr</Link>
             </h1>
             <Outlet />
         </div>
