@@ -40,7 +40,7 @@ export default function HomePage() {
         setRoomCode(cleanRoomCode)
     }
 
-    const user = useUser(db)
+    const user = useUser(db, roomCode)
     const uid = user?.uid
     const name = user?.name || ''
     const userRealName = user?.realName || ''
@@ -75,7 +75,7 @@ export default function HomePage() {
         const resultUid = result?.user?.uid
         const userNameOrDefault = userName || ''
         const realNameOrDefault = realName || ''
-        const userNameRef = ref(db, `user/${resultUid}`)
+        const userNameRef = ref(db, `user/${roomCode}/${resultUid}`)
         await set(userNameRef, {
             name: userNameOrDefault,
             realName: realNameOrDefault,

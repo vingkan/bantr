@@ -33,13 +33,13 @@ export default function MatchPage() {
 
     const roomId = localStorage.getItem('bantr__room')
 
-    const user = useUser(db)
+    const user = useUser(db, roomId)
     const uid = user?.uid
 
     const [userMap, setUserMap] = useState({})
     
     useEffect(() => {
-        const userMapRef = query(query(ref(db, 'user'), orderByChild('room')), equalTo(roomId))
+        const userMapRef = ref(db, `user/${roomId}`)
         onValue(userMapRef, async (snap) => {
             const userMapVal = snap.val() || {}
             setUserMap(userMapVal)

@@ -104,7 +104,7 @@ export function ChatApp(props) {
     const [user, setUser] = useState({})
     
     useEffect(() => {
-        const userRef = ref(db, `user/${uid}`)
+        const userRef = ref(db, `user/${roomId}/${uid}`)
         onValue(userRef, async (snap) => {
             const userVal = snap.val() || {}
             setUser(userVal)
@@ -117,7 +117,7 @@ export function ChatApp(props) {
     const theirName = chatUser?.name || 'someone'
     
     useEffect(() => {
-        const chatUserRef = ref(db, `user/${otherUid}`)
+        const chatUserRef = ref(db, `user/${roomId}/${otherUid}`)
         onValue(chatUserRef, async (snap) => {
             const chatUserVal = snap.val() || {}
             setChatUser(chatUserVal)
@@ -152,7 +152,7 @@ export function ChatApp(props) {
     }
 
     const doSendChat = async () => {
-        if (!contentText || !allowSend) {
+        if (!contentText || isViewOnly) {
             return
         }
         const message = {

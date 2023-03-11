@@ -11,7 +11,7 @@ import {
 
 import { CHARACTERS } from '../app/characters'
 import { REACTIONS, getChatId } from '../app/chat'
-import { useUser, getRoomCodeFromUrl } from '../app/user'
+import { getRoomCodeFromUrl } from '../app/user'
 
 function flattenReactionMap(reactionMapVal, roomId) {
     return Object.values(reactionMapVal).reduce((messageAgg, messageVal) => {
@@ -137,13 +137,10 @@ export default function ResultsPage() {
 
     const roomId = getRoomCodeFromUrl()
 
-    const user = useUser(db)
-    const uid = user?.uid
-
     const [userMap, setUserMap] = useState({})
     
     useEffect(() => {
-        const userMapRef = query(query(ref(db, 'user'), orderByChild('room')), equalTo(roomId))
+        const userMapRef = ref(db, `user/${roomId}`)
         onValue(userMapRef, async (snap) => {
             const userMapVal = snap.val() || {}
             setUserMap(userMapVal)
@@ -196,6 +193,7 @@ export default function ResultsPage() {
         }
     })
 
+    const noResults = <p>No results yet.</p>
     const userResults = usersWithLove.map((u) => (
         <UserResult key={u.uid} roomId={roomId} {...u} />
     ))
@@ -205,7 +203,7 @@ export default function ResultsPage() {
             <div className="Section Center">
                 <h2>Results</h2>
                 <div className="AllUserResults">
-                    {userResults}
+                    {userResults.length > 0 ? userResults : noResults }
                 </div>
                 <br />
                 <Link to="/">Back to Home</Link>

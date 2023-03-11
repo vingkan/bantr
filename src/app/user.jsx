@@ -7,19 +7,19 @@ import {
 
 import { useCurrentAuthUser } from './authentication'
 
-export function useUser(db) {
+export function useUser(db, roomId) {
     const authUser = useCurrentAuthUser()
     const uid = authUser?.uid
     
     const [user, setUser] = useState({})
 
     useEffect(() => {
-        const userRef = ref(db, `user/${uid}`)
+        const userRef = ref(db, `user/${roomId}/${uid}`)
         onValue(userRef, async (snap) => {
             const userVal = snap.val()
             setUser(userVal)
         })
-    }, [uid])
+    }, [uid, roomId])
 
     return { uid, ...user }    
 }

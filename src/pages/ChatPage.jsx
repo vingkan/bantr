@@ -11,7 +11,7 @@ import { useUser } from '../app/user'
 export default function ChatPage() {
     const db = getDatabase()
     const roomId = localStorage.getItem('bantr__room')
-    const user = useUser(db)
+    const user = useUser(db, roomId)
     const uid = user?.uid
     const { chatId } = useParams()
 
