@@ -98,7 +98,7 @@ export default function HomePage() {
                     <p>Room Code:</p>
                     <input type="text" value={roomCode} onChange={doRoomCodeChange} />
                     <p>Your Real Name:</p>
-                    <input type="text" value={realName} onChange={(e) => setRealName(e.target.value)} />
+                    <input type="text" value={realName} onChange={(e) => setRealName(e.target.value.trim())} />
                     <p>Your Screen Name:</p>
                     <input type="text" value={userName} onChange={doUserNameChange} />
                     <p>Your Character:</p>

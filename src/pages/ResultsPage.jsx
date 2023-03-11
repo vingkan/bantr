@@ -9,6 +9,8 @@ import {
     ref,
 } from 'firebase/database'
 
+import { CHARACTERS } from '../app/characters'
+import { REACTIONS } from '../app/chat'
 import { useUser, getChatId, getRoomCodeFromUrl } from '../app/user'
 
 function flattenReactionMap(reactionMapVal, roomId) {
@@ -23,12 +25,19 @@ function flattenReactionMap(reactionMapVal, roomId) {
     }, [])
 }
 
-function formulaForLove(reactions, from) {
+function countReactions(reactions) {
+    return reactions.reduce((agg, val) => ({
+        ...agg,
+        [val.reaction]: (agg?.[val.reaction] || 0) + 1,
+    }), {})
+}
+
+function formulaForLove(reactions) {
     const {
         positives,
         negatives,
         total,
-    } = reactions.filter(r => r.from === from).reduce((agg, val) => {
+    } = reactions.reduce((agg, val) => {
         return { 
             positives: agg.positives + (val.reaction !== 'red_flag' ? 1 : 0),
             negatives: agg.negatives + (val.reaction === 'red_flag' ? 1 : 0),
@@ -40,6 +49,86 @@ function formulaForLove(reactions, from) {
         total: 0,
     })
     return positives - negatives
+}
+
+function ReactionCount(props) {
+    return (
+        <span className="ReactionCount">
+            <span>{props.emoji}</span>
+            <span>{props?.count || 0}</span> 
+        </span>
+    )  
+}
+
+function ReactionCounts(props) {
+    const reactionCountMap = props.reactions || {}
+    const countEls = Object.keys(REACTIONS).map((r) => ({
+        reaction: r,
+        emoji: REACTIONS?.[r],
+        count: props.reactions?.[r],
+    })).map((r) => (
+        <ReactionCount key={r.reaction} {...r} />
+    ))
+    return (
+        <p className="ReactionCounts">{countEls}</p>
+    )
+}
+
+function UserResult(props) {
+    const { matches } = props
+    const [loveIndex, setLoveIndex] = useState(0)
+
+    function decrementIndex() {
+        setLoveIndex((prev) => (prev === 0 ? matches.length - 1 : prev - 1))
+    }
+
+    function incrementIndex() {
+        setLoveIndex((prev) => ((prev + 1) % matches.length))
+    }
+
+    const matchUser = matches?.[loveIndex] || {}
+
+    const noCharacter = { name: 'No Character' }
+    const userCharacter = CHARACTERS?.[props.character] || noCharacter
+    const matchCharacter = CHARACTERS?.[matchUser.character] || noCharacter
+    const userImageUrl = `/image/${props.character}.jpeg`
+    const matchImageUrl = `/image/${matchUser.character}.jpeg`
+
+    return (
+        <div className="UserResult">
+            <div className="ResultBlock UserBlock">
+                <h3>{props.realName}</h3>
+                <h4>{props.name}</h4>
+                <h5>{userCharacter.name}</h5>
+                <ReactionCounts reactions={matchUser.theirCounts} />
+                <p>Reactions Received</p>
+            </div>
+            <div className="ResultBlock MatchBlock">
+                <h3>{props.realName}'s #{loveIndex + 1} Match</h3>
+                <p>Love Factor: {matchUser?.loveFactor}</p>
+                <button onClick={decrementIndex}>{'<'}</button>
+                <div className="MatchPhotoPair">
+                    
+                    <div className="MatchPhoto">
+                        <img src={userImageUrl} alt={userCharacter.name} />
+                    </div>
+                    <div className="MatchPhoto">
+                        <img src={matchImageUrl} alt={matchCharacter.name} />
+                    </div>
+                    
+                </div>
+                <button onClick={incrementIndex}>{'>'}</button>
+                
+            </div>
+            <div className="ResultBlock UserBlock">
+                <h3>{matchUser.realName}</h3>
+                <h4>{matchUser.name}</h4>
+                <h5>{matchCharacter.name}</h5>
+                <ReactionCounts reactions={matchUser.myCounts} />
+                <p>Reactions Received</p>
+            </div>
+        </div>
+    )
 }
 
 export default function ResultsPage() {
@@ -81,54 +170,37 @@ export default function ResultsPage() {
             const subMap = reactionMap?.[chatId] || {}
             const keyMap = {[chatId]: subMap}
             const chatReactions = flattenReactionMap(keyMap, roomId)
-            const loveFactor = formulaForLove(chatReactions, currentUser.uid)
+            const myReactions = chatReactions.filter(r => r.from === currentUser.uid)
+            const theirReactions = chatReactions.filter(r => r.from === otherUser.uid)
+            const loveFactor = formulaForLove(myReactions)
             return {
                 ...otherUser,
                 loveFactor,
+                myCounts: countReactions(myReactions),
+                theirCounts: countReactions(theirReactions),
             }
-        }).sort((a, b) => b.loveFactor - a.loveFactor)
+        }).sort(
+            (a, b) => b.loveFactor - a.loveFactor
+        ).filter(
+            (u) => u.uid !== currentUser.uid
+        )
         return {
             ...currentUser,
             matches,
         }
     })
 
-    function UserResult(props) {
-        const { matches } = props
-        const [loveIndex, setLoveIndex] = useState(0)
-
-        function decrementIndex() {
-            setLoveIndex((prev) => (prev === 0 ? matches.length - 1 : prev - 1))
-        }
-
-        function incrementIndex() {
-            setLoveIndex((prev) => ((prev + 1) % matches.length))
-        }
-
-        const matchUser = matches?.[loveIndex] || {}
-
-        return (
-            <div>
-                <br />
-                <h3>{props.realName}</h3>
-                <p>{props.name} ({props.character})</p>
-                <h4>Perfect Match #{loveIndex + 1}</h4>
-                <p>{matchUser.realName} ({matchUser.character})</p>
-                <p>Love Factor: {matchUser?.loveFactor}</p>
-                <button onClick={incrementIndex}>Next</button>
-            </div>
-        )
-    }
-
     const userResults = usersWithLove.map((u) => (
-        <UserResult {...u} />
+        <UserResult key={u.uid} {...u} />
     ))
 
     return (
         <div>
-            <div className="Section">
-                <h2 className="Center">Results</h2>
-                {userResults}
+            <div className="Section Center">
+                <h2>Results</h2>
+                <div className="AllUserResults">
+                    {userResults}
+                </div>
                 <br />
                 <Link to="/">Back to Home</Link>
             </div>

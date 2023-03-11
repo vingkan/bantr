@@ -22,8 +22,14 @@ export const CHARACTERS = {
     beard: {
         name: 'Coach Beard'
     },
-    danny: {
-        name: 'Danny Rojas'
+    dani: {
+        name: 'Dani Rojas'
+    },
+    nathan: {
+      name: 'Nathan Shelley'
+    },
+    rupert: {
+      name: 'Rupert Mannion'
     }
 }
 

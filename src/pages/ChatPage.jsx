@@ -12,13 +12,8 @@ import {
     serverTimestamp,
 } from 'firebase/database'
 
+import { REACTIONS } from '../app/chat'
 import { useUser } from '../app/user'
-
-const REACTIONS = {
-    green_heart: '💚',
-    red_flag: '🚩',
-    soccer_ball: '⚽',
-}
 
 function ReactionButton({ reactionId, sendReaction, isSet }) {
     const emoji = REACTIONS?.[reactionId]

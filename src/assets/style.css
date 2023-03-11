@@ -37,6 +37,10 @@ h3 {
     padding: 0.5em;
 }
 
+.InlineBlock {
+    display: inline-block;
+}
+
 /* Header */
 
 .AppTitle, .PageTitle, .MyUserName, .TheirUserName {
@@ -260,4 +264,95 @@ h3 {
 .Reactions .Reaction {
     margin: 0 0.25em;
     font-size: 0.75em;
+}
+
+/* Results */
+
+.AllUserResults {
+    margin: 2em auto;
+}
+
+.UserResult {
+    width: 100%;
+    margin: 3em auto;
+    display: inline-block;
+}
+
+.UserResult .ResultBlock {
+    margin: 1em;
+    padding: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.UserBlock {
+    width: 10em;
+}
+
+.UserBlock h4 {
+    font-size: 1.35em;
+    margin: 0.5em 0;
+    color: var(--main-color);
+}
+
+.UserBlock h5 {
+    font-size: 1.1em;
+}
+
+.MatchBlock {
+    width: 25em;
+}
+
+.MatchPhotoPair {
+    display: inline-block;
+    margin: 1em;
+}
+
+.MatchBlock button {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3.5em;
+    background: none;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: rgba(0, 0, 0, 0.25);
+}
+
+.MatchBlock button:hover {
+    cursor: pointer;
+}
+
+.MatchPhoto {
+    width: 10em;
+    height: 10em;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--main-color);
+}
+
+.MatchPhoto img {
+    width: 100%;
+    height: 100%;
+}
+
+.MatchPhoto:nth-child(2) {
+    margin-left: -2em;
+    border-color: var(--accent-color);
+}
+
+.ReactionCounts {
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+}
+
+.ReactionCount {
+    margin: 0.5em;
+}
+
+.ReactionCount span {
+    margin: 0.1em;
 }
