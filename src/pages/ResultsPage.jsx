@@ -96,37 +96,41 @@ function UserResult(props) {
     const viewPath = `/chat/view/${props.uid}/${matchUser.uid}?room=${roomId}`
 
     return (
-        <div className="UserResult">
-            <div className="ResultBlock UserBlock">
-                <h3>{props.realName}</h3>
-                <h4>{props.name}</h4>
-                <h5>{userCharacter.name}</h5>
-                <ReactionCounts reactions={matchUser.theirCounts} />
-                <p>Reactions Received</p>
-            </div>
-            <div className="ResultBlock MatchBlock">
-                <h3>{props.realName}'s #{loveIndex + 1} Match</h3>
-                <p>Love Factor: {matchUser?.loveFactor}</p>
-                <button onClick={decrementIndex}>{'<'}</button>
-                <div className="MatchPhotoPair">
-                    
-                    <div className="MatchPhoto">
-                        <img src={userImageUrl} alt={userCharacter.name} />
-                    </div>
-                    <div className="MatchPhoto">
-                        <img src={matchImageUrl} alt={matchCharacter.name} />
-                    </div>
-                    
+        <div className="UserResultWrapper">
+            <div className="UserResult">
+                <div className="ResultBlock UserBlock">
+                    <h3>{props.realName}</h3>
+                    <h4>{props.name}</h4>
+                    <h5>{userCharacter.name}</h5>
+                    <ReactionCounts reactions={matchUser.theirCounts} />
+                    <p>Reactions Received</p>
                 </div>
-                <button onClick={incrementIndex}>{'>'}</button>
-                <Link to={viewPath}>View Chat</Link>
-            </div>
-            <div className="ResultBlock UserBlock">
-                <h3>{matchUser.realName}</h3>
-                <h4>{matchUser.name}</h4>
-                <h5>{matchCharacter.name}</h5>
-                <ReactionCounts reactions={matchUser.myCounts} />
-                <p>Reactions Received</p>
+                <div className="ResultBlock MatchBlock">
+                    <h3>{props.realName}'s #{loveIndex + 1} Match</h3>
+                    <p>Love Factor: {matchUser?.loveFactor}</p>
+                    <button onClick={decrementIndex}>{'<'}</button>
+                    <div className="MatchPhotoPair">
+                        
+                        <div className="MatchPhoto">
+                            <img src={userImageUrl} alt={userCharacter.name} />
+                        </div>
+                        <div className="MatchPhoto">
+                            <img src={matchImageUrl} alt={matchCharacter.name} />
+                        </div>
+                        
+                    </div>
+                    <button onClick={incrementIndex}>{'>'}</button>
+                    <p>
+                      <Link to={viewPath}>View Chat</Link>
+                    </p>
+                </div>
+                <div className="ResultBlock UserBlock">
+                    <h3>{matchUser.realName}</h3>
+                    <h4>{matchUser.name}</h4>
+                    <h5>{matchCharacter.name}</h5>
+                    <ReactionCounts reactions={matchUser.myCounts} />
+                    <p>Reactions Received</p>
+                </div>
             </div>
         </div>
     )
@@ -202,6 +206,7 @@ export default function ResultsPage() {
         <div>
             <div className="Section Center">
                 <h2>Results</h2>
+                <p className="ScrollMessage">Scroll horizontally to see each match.</p>
                 <div className="AllUserResults">
                     {userResults.length > 0 ? userResults : noResults }
                 </div>

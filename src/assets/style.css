@@ -6,7 +6,7 @@ body, button, input, select, textarea {
     font-family: 'Mulish', sans-serif;
     font-size: 18px;
     line-height: 1.1em;
-    --main-color: #8c0f39;
+    --main-color: #a6024b;
     --accent-color: #eb5e1c;
     --light-color: #fadee8;
 }
@@ -141,6 +141,7 @@ h3 {
 
 .MatchTile h3 {
     line-height: 1.5em;
+    font-size: 1.15em;
 }
 
 .MatchTile:hover {
@@ -186,7 +187,7 @@ h3 {
 }
 
 .ChangeProfileLink {
-    margin: 1em 0.5em;
+    padding: 0.5em;
 }
 
 /* Chat Page */
@@ -200,11 +201,15 @@ h3 {
 }
 
 .Chat {
-    height: calc(100vh - 13em);
+    height: calc(100vh - 12.98em);
     overflow: scroll;
     /* https://stackoverflow.com/a/68874831 */
     display: flex;
     flex-direction: column-reverse;
+}
+
+.Chat.ViewOnly {
+    height: calc(100vh - 6.98em);
 }
 
 .Sender {
@@ -331,20 +336,20 @@ h3 {
 
 .Reactions {
     position: relative;
-    margin-top: -0.75em;
+    margin-top: -0.5em;
     height: 1em;
-    width: calc(75% + 1.5em);
+    width: calc(75% + 2.125em);
     text-align: right;
 }
 
 .Reactions .Reaction {
     margin: 0 0.25em;
-    font-size: 0.75em;
+    font-size: 1.5em;
 }
 
 .MyMessage + .Reactions {
     text-align: left;
-    margin-left: calc(25% - 1.5em);
+    margin-left: calc(25% - 1.825em);
 }
 
 /* Results */
@@ -353,10 +358,25 @@ h3 {
     margin: 2em auto;
 }
 
-.UserResult {
+.UserResultWrapper {
     width: 100%;
+    overflow-x: scroll;
+}
+
+.UserResult {
+    width: 65em;
     margin: 3em auto;
-    display: inline-block;
+    display: block;
+}
+
+.ScrollMessage {
+    margin-top: 1em;
+}
+
+@media (min-width: 75em) {
+    .ScrollMessage {
+        display: none;
+    }
 }
 
 .UserResult .ResultBlock {
@@ -391,7 +411,7 @@ h3 {
 
 .MatchPhotoPair {
     display: inline-block;
-    margin: 1em;
+    margin: 1em 0;
 }
 
 .MatchBlock button {
@@ -425,7 +445,7 @@ h3 {
 }
 
 .MatchPhoto:nth-child(2) {
-    margin-left: -2em;
+    margin-left: -4em;
     border-color: var(--accent-color);
 }
 

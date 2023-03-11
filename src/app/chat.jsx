@@ -227,6 +227,7 @@ export function ChatApp(props) {
         })
     }, [roomId, uid, otherUid])
 
+    const viewClass = isViewOnly ? 'ViewOnly' : 'LiveChat'
     const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/match'
 
     const isTypingEl = (
@@ -282,7 +283,7 @@ export function ChatApp(props) {
         <div>
             <h2 className="PageTitle TheirUserName">{theirName}</h2>
             <Link to={backLinkPath} className="BackLink">{'< Back'}</Link>
-            <div className="Chat">
+            <div className={`Chat ${viewClass}`}>
                 <div className="ChatWrapper">
                     <div>{messageEls}</div>
                 </div>
