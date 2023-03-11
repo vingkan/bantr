@@ -6,7 +6,8 @@
 <body>
   <script type="text/javascript">
 
-    localStorage.setItem("bantr__pathname", document.location.pathname)
+    const destination = document.location.pathname + document.location.search
+    localStorage.setItem("bantr__pathname", destination)
     document.location.pathname = "/bantr"
 
   </script>

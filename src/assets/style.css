@@ -282,12 +282,16 @@ h3 {
     margin: 1em;
     padding: 1em;
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
     text-align: center;
 }
 
 .UserBlock {
     width: 10em;
+}
+
+.UserBlock h3 {
+    margin-top: 2.5em;
 }
 
 .UserBlock h4 {
