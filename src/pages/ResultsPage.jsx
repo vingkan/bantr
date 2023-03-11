@@ -157,7 +157,7 @@ export default function ResultsPage() {
     const [reactionMap, setReactionMap] = useState({})
 
     useEffect(() => {
-        const reactionMapRef = ref(db, 'reaction')
+        const reactionMapRef = ref(db, `reaction/${roomId}`)
         onValue(reactionMapRef, async (snap) => {
             const reactionMapVal = snap.val() || {}
             setReactionMap(reactionMapVal)
@@ -178,9 +178,14 @@ export default function ResultsPage() {
                 loveFactor,
                 myCounts: countReactions(myReactions),
                 theirCounts: countReactions(theirReactions),
+                totalReactions: chatReactions.length,
             }
         }).sort(
-            (a, b) => b.loveFactor - a.loveFactor
+            (a, b) => (
+                a.loveFactor !== b.loveFactor
+                    ? b.loveFactor - a.loveFactor
+                    : b.totalReactions - a.totalReactions
+            )
         ).filter(
             (u) => u.uid !== currentUser.uid
         )

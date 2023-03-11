@@ -112,7 +112,7 @@ export default function ChatPage() {
     }, [otherUid])
     
     const [chatMap, setChatMap] = useState({})
-    const chatRef = ref(db, `chat/${chatId}`)
+    const chatRef = ref(db, `chat/${roomId}/${chatId}`)
 
     useEffect(() => {
         onValue(chatRef, async (snap) => {
@@ -124,7 +124,7 @@ export default function ChatPage() {
     const [reactionMap, setReactionMap] = useState({})
     
     useEffect(() => {
-        const reactionMapRef = ref(db, `reaction/${chatId}`)
+        const reactionMapRef = ref(db, `reaction/${roomId}/${chatId}`)
         onValue(reactionMapRef, async (snap) => {
             const reactionMapVal = snap.val() || {}
             setReactionMap(reactionMapVal)
@@ -154,7 +154,7 @@ export default function ChatPage() {
     }
 
     const doSendReaction = async (fromUid, toUid, chatId, messageId, reactionId, shouldSet) => {
-        const reactionRef = ref(db, `reaction/${chatId}/${messageId}/${reactionId}`)
+        const reactionRef = ref(db, `reaction/${roomId}/${chatId}/${messageId}/${reactionId}`)
         if (shouldSet) {
             await set(reactionRef, {
                 timestamp: serverTimestamp(),

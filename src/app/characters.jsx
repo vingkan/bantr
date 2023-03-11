@@ -26,10 +26,13 @@ export const CHARACTERS = {
         name: 'Dani Rojas'
     },
     nathan: {
-      name: 'Nathan Shelley'
+        name: 'Nathan Shelley'
     },
     rupert: {
-      name: 'Rupert Mannion'
+        name: 'Rupert Mannion'
+    },
+    flo: {
+        name: 'Flo \'Sassy\' Collins'
     }
 }
 
