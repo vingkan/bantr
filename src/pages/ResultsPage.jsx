@@ -91,8 +91,8 @@ function UserResult(props) {
     const noCharacter = { name: 'No Character' }
     const userCharacter = CHARACTERS?.[props.character] || noCharacter
     const matchCharacter = CHARACTERS?.[matchUser.character] || noCharacter
-    const userImageUrl = `/image/${props.character}.jpeg`
-    const matchImageUrl = `/image/${matchUser.character}.jpeg`
+    const userImageUrl = `/bantr/image/${props.character}.jpeg`
+    const matchImageUrl = `/bantr/image/${matchUser.character}.jpeg`
 
     return (
         <div className="UserResult">
