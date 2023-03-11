@@ -8,6 +8,7 @@ body, button, input, select, textarea {
     line-height: 1.1em;
     --main-color: #8c0f39;
     --accent-color: #eb5e1c;
+    --light-color: #fadee8;
 }
 
 p {
@@ -129,11 +130,17 @@ h3 {
     margin: 0.5em;
     margin-right: 0;
     margin-bottom: 0;
+    vertical-align: top;
     text-decoration: none;
 }
 
+.MatchTile.ThemNext {
+    background: var(--light-color);
+    color: var(--main-color) !important;
+}
+
 .MatchTile h3 {
-    line-height: 1.75em;
+    line-height: 1.5em;
 }
 
 .MatchTile:hover {
@@ -166,7 +173,16 @@ h3 {
 
 .MatchTile .ChatIcon {
     text-align: left;
-    color: white
+}
+
+.MatchTile .ChatIcon p {
+    margin: 0.5em 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1; 
+    -webkit-box-orient: vertical;
 }
 
 .ChangeProfileLink {
@@ -211,7 +227,9 @@ h3 {
 
 .SendContent {
     width: 80%;
-    background: #e6e6e6;
+    outline: none;
+    background: var(--light-color);
+    color: var(--main-color);
 }
 
 .SendButton {

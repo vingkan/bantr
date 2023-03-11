@@ -166,8 +166,10 @@ export function ChatApp(props) {
         }
         await push(chatRef, message)
         setContentText('')
-        const latestRef = ref(db, `live/${roomId}/${otherUid}/${uid}/latest`)
-        await set(latestRef, message)
+        const latestMyRef = ref(db, `live/${roomId}/${otherUid}/${uid}/latest`)
+        await set(latestMyRef, message)
+        const latestTheirRef = ref(db, `live/${roomId}/${uid}/${otherUid}/latest`)
+        await set(latestTheirRef, message)
     }
 
     const doSendReaction = async (fromUid, toUid, chatId, messageId, reactionId, shouldSet) => {
@@ -228,7 +230,7 @@ export function ChatApp(props) {
     const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/match'
 
     const isTypingEl = (
-        <div className="MessageTile TypingMessage">
+        <div key="typing" className="MessageTile TypingMessage">
             <div className="MessageBox TheirMessage">
                 <p>
                     <span className="TypingDot">.</span>

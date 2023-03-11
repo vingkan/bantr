@@ -14,16 +14,43 @@ import {
 import { getChatId } from '../app/chat'
 import { useUser } from '../app/user'
 
-function MatchTile({ myUid, user }) {
+const MS_TO_MINS = 1000 * 60
+
+function LiveContent({ live, myUid }) {
+    if (!live?.latest) {
+        return <p>Chat</p>
+    }
+    const latest = live.latest
+    const author = latest?.from === myUid ? 'You' : 'Them'
+    const content = latest?.content
+    const latestMessage = `${author}: ${content}`
+    return <p>{latestMessage}</p>
+}
+
+function TimeSince({ live }) {
+    if (!live?.latest) {
+        return <p>New Match</p>
+    }
+    const latest = live.latest
+    const deltaMins = (Date.now() - latest?.timestamp) / MS_TO_MINS
+    const mins = Math.max(Math.floor(deltaMins), 0)
+    const minsMessage = mins >= 60 ? `too long ago` : `${mins}m ago`
+    return <p>{minsMessage}</p>
+}
+
+function MatchTile({ myUid, user, live }) {
     const chatId = getChatId(myUid, user?.uid)
     const distance = Math.floor(Math.random() * 8) + 1
+    const turnClass = (live?.latest?.from === myUid) ? 'ThemNext' : 'YouNext'
     return (
-        <Link className="MatchTile" to={`/chat/${chatId}`}>
+        <Link className={`MatchTile ${turnClass}`} to={`/chat/${chatId}`}>
             <div className="Teaser">
                 <h3>{user?.name || 'No Name Yet'}</h3>
-                <p>{distance} km away</p>
+                <TimeSince live={live} />
             </div>
-            <div className="ChatIcon">Chat</div>
+            <div className="ChatIcon">
+                <LiveContent {...{live, myUid}} />
+            </div>
         </Link>
     )
 }
@@ -51,12 +78,23 @@ export default function MatchPage() {
         ...(userMap[uid]),
     }))
 
-    // useEffect(() => {
-    //   const messagesRef = ref(`chat`)
-    // })
+    const [liveMap, setLiveMap] = useState({})
+
+    useEffect(() => {
+        const liveRef = ref(db, `live/${roomId}/${uid}`)
+        onValue(liveRef, async (snap) => {
+            const liveRefVal = snap.val() || {}
+            setLiveMap(liveRefVal)
+        })
+    }, [roomId, uid])
 
     const matchTiles = allUsers.filter(user => user.uid !== uid).map((user) => (
-        <MatchTile key={user.uid} myUid={uid} user={user} />
+        <MatchTile
+            key={user.uid}
+            myUid={uid}
+            user={user}
+            live={liveMap?.[user?.uid] || {}}
+        />
     ))
     const noMatches = <p className="Center">No one is nearby.</p>
     const matchResults = matchTiles.length > 0 ? matchTiles : noMatches
