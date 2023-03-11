@@ -14,6 +14,10 @@ p {
   margin: 0.5em 0;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
 .Center {
     text-align: center;
 }
@@ -266,6 +270,11 @@ h3 {
     font-size: 0.75em;
 }
 
+.MyMessage + .Reactions {
+    text-align: left;
+    margin-left: calc(25% - 1.5em);
+}
+
 /* Results */
 
 .AllUserResults {
@@ -306,6 +315,15 @@ h3 {
 
 .MatchBlock {
     width: 25em;
+}
+
+.MatchBlock a, .MatchBlock a:visited {
+    color: var(--main-color);
+}
+
+.MatchBlock a:hover {
+    color: var(--accent-color);
+    cursor: pointer;
 }
 
 .MatchPhotoPair {

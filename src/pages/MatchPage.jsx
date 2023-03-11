@@ -11,7 +11,8 @@ import {
     ref,
 } from 'firebase/database'
 
-import { useUser, getChatId } from '../app/user'
+import { getChatId } from '../app/chat'
+import { useUser } from '../app/user'
 
 function MatchTile({ myUid, user }) {
     const chatId = getChatId(myUid, user?.uid)

@@ -24,10 +24,6 @@ export function useUser(db) {
     return { uid, ...user }    
 }
 
-export function getChatId(a, b) {
-    return a < b ? `${a}~${b}` : `${b}~${a}`
-}
-
 export function getRoomCodeFromUrl() {
     const query = document.location.search
     const codeFromQuery = query?.split('room=')?.[1]?.split('&')?.[0]

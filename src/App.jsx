@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import MatchPage from './pages/MatchPage'
 import ChatInboxPage from './pages/ChatInboxPage'
 import ChatPage from './pages/ChatPage'
+import ViewChatPage from './pages/ViewChatPage'
 import ResultsPage from './pages/ResultsPage'
 
 const BASE_URL = '/bantr'
@@ -36,6 +37,7 @@ function AppRouting() {
                 <Route path="chat">
                     <Route index element={<ChatInboxPage />} />
                     <Route path=":chatId" element={<ChatPage />} />
+                    <Route path="view/:myUid/:theirUid" element={<ViewChatPage />} />
                 </Route>
                 <Route path="results" element={<ResultsPage />} />
                 <Route path="*" element={<NotFoundPage />} />

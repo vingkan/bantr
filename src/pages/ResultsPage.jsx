@@ -10,8 +10,8 @@ import {
 } from 'firebase/database'
 
 import { CHARACTERS } from '../app/characters'
-import { REACTIONS } from '../app/chat'
-import { useUser, getChatId, getRoomCodeFromUrl } from '../app/user'
+import { REACTIONS, getChatId } from '../app/chat'
+import { useUser, getRoomCodeFromUrl } from '../app/user'
 
 function flattenReactionMap(reactionMapVal, roomId) {
     return Object.values(reactionMapVal).reduce((messageAgg, messageVal) => {
@@ -75,7 +75,7 @@ function ReactionCounts(props) {
 }
 
 function UserResult(props) {
-    const { matches } = props
+    const { roomId, matches } = props
     const [loveIndex, setLoveIndex] = useState(0)
 
     function decrementIndex() {
@@ -93,6 +93,7 @@ function UserResult(props) {
     const matchCharacter = CHARACTERS?.[matchUser.character] || noCharacter
     const userImageUrl = `/bantr/image/${props.character}.jpeg`
     const matchImageUrl = `/bantr/image/${matchUser.character}.jpeg`
+    const viewPath = `/chat/view/${props.uid}/${matchUser.uid}?room=${roomId}`
 
     return (
         <div className="UserResult">
@@ -118,7 +119,7 @@ function UserResult(props) {
                     
                 </div>
                 <button onClick={incrementIndex}>{'>'}</button>
-                
+                <Link to={viewPath}>View Chat</Link>
             </div>
             <div className="ResultBlock UserBlock">
                 <h3>{matchUser.realName}</h3>
@@ -196,7 +197,7 @@ export default function ResultsPage() {
     })
 
     const userResults = usersWithLove.map((u) => (
-        <UserResult key={u.uid} {...u} />
+        <UserResult key={u.uid} roomId={roomId} {...u} />
     ))
 
     return (
