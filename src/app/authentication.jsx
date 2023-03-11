@@ -1,3 +1,4 @@
+/* global localStorage */
 import { useEffect, useState } from 'react'
 import {
     getAuth,
@@ -6,12 +7,26 @@ import {
     signOut,
 } from 'firebase/auth'
 
+const USER_ID_KEY = 'bantr__uid'
+
+function getDeviceUser(user) {
+    // Overwrite auth user ID with device user ID
+    const deviceUid = localStorage.getItem(USER_ID_KEY)
+    const deviceUser = {
+        ...user,
+        uid: deviceUid || user?.uid,
+    }
+    // Store result user ID to device
+    localStorage.setItem(USER_ID_KEY, deviceUser?.uid)
+    return deviceUser
+}
+
 export async function signInUser() {
     try {
         const auth = getAuth()
         const { user } = await signInAnonymously(auth)
         return {
-            user,
+            user: getDeviceUser(user),
             error: null,
         }
     } catch (err) {
@@ -47,9 +62,9 @@ export function useCurrentAuthUser() {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setAuthUser((prevAuthUser) => {
                 if (prevAuthUser?.uid !== user?.uid) {
-                    return user
+                    return getDeviceUser(user)
                 }
-                return prevAuthUser
+                return getDeviceUser(prevAuthUser)
             })
         })
         return unsubscribe

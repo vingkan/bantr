@@ -14,8 +14,13 @@ p {
   margin: 0.5em 0;
 }
 
+a, a:visited {
+    color: var(--main-color);
+}
+
 a:hover {
-  cursor: pointer;
+    color: var(--accent-color);
+    cursor: pointer;
 }
 
 .Center {
@@ -118,7 +123,7 @@ h3 {
 .MatchTile {
     display: inline-block;
     background: var(--main-color);
-    color: white;
+    color: white !important;
     width: calc(100% - 2em);
     padding: 0.5em;
     margin: 0.5em;
@@ -162,6 +167,10 @@ h3 {
 .MatchTile .ChatIcon {
     text-align: left;
     color: white
+}
+
+.ChangeProfileLink {
+    margin: 1em 0.5em;
 }
 
 /* Chat Page */
@@ -209,6 +218,48 @@ h3 {
     width: 20%;
     background: var(--main-color);
     color: white;
+}
+
+@keyframes TypingDotAnimation {
+    0%, 100% {
+        bottom: 0;
+    }
+    50% {
+        bottom: 0.5em;
+    }
+}
+
+@keyframes TypingDotReverseAnimation {
+    0%, 100% {
+        bottom: 0.5em;
+    }
+    50% {
+        bottom: 0;
+    }
+}
+
+.TypingDot {
+    background: white;
+    color: transparent;
+    height: 0.5em;
+    width: 0.5em;
+    border-radius: 50%;
+    margin: 0 0.125em;
+    display: inline-block;
+    vertical-align: bottom;
+    position: relative;
+    bottom: 0;
+    animation: TypingDotAnimation 1s linear infinite;
+}
+
+.TypingDot:nth-child(odd) {
+    bottom: 0.5em;
+    animation: TypingDotReverseAnimation 1s linear infinite;
+}
+
+.TypingMessage {
+    opacity: 0.75;
+    width: 3em;
 }
 
 /* Messages */
@@ -318,15 +369,6 @@ h3 {
 
 .MatchBlock {
     width: 25em;
-}
-
-.MatchBlock a, .MatchBlock a:visited {
-    color: var(--main-color);
-}
-
-.MatchBlock a:hover {
-    color: var(--accent-color);
-    cursor: pointer;
 }
 
 .MatchPhotoPair {

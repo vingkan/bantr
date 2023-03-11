@@ -166,7 +166,7 @@ export function ChatApp(props) {
         }
         await push(chatRef, message)
         setContentText('')
-        const latestRef = ref(db, `live/${roomId}/${uid}/${otherUid}/latest`)
+        const latestRef = ref(db, `live/${roomId}/${otherUid}/${uid}/latest`)
         await set(latestRef, message)
     }
 
@@ -201,7 +201,7 @@ export function ChatApp(props) {
         if (isViewOnly) {
             return
         }
-        const typingRef = ref(db, `live/${roomId}/${uid}/${otherUid}/typing`)
+        const typingRef = ref(db, `live/${roomId}/${otherUid}/${uid}/typing`)
         await set(typingRef, isTyping)
         if (!isTyping) {
             return
@@ -211,7 +211,33 @@ export function ChatApp(props) {
         }, NO_LONGER_TYPING_DELAY_MS)
     }
 
+    const [isOtherTyping, setIsOtherTyping] = useState(false)
+
+    useEffect(() => {
+        if (isViewOnly) {
+            return
+        }
+        const incomingRef = ref(db, `live/${roomId}/${uid}`)
+        onValue(incomingRef, async (snap) => {
+            const incomingVal = snap.val() || {}
+            const isOtherTypingLive = incomingVal?.[otherUid]?.typing
+            setIsOtherTyping(isOtherTypingLive)
+        })
+    }, [roomId, uid, otherUid])
+
     const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/match'
+
+    const isTypingEl = (
+        <div className="MessageTile TypingMessage">
+            <div className="MessageBox TheirMessage">
+                <p>
+                    <span className="TypingDot">.</span>
+                    <span className="TypingDot">.</span>
+                    <span className="TypingDot">.</span>
+                </p>
+            </div>
+        </div>
+    )
 
     const messageTiles = chatMessages.map((message) => (
         <MessageTile
@@ -222,10 +248,15 @@ export function ChatApp(props) {
             {...message}
         />
     ))
+    const allMessageTiles = (
+        (isViewOnly || !isOtherTyping)
+            ? messageTiles
+            : [...messageTiles, isTypingEl]
+    )
     const noMessages = (
         <p className="Starter">No messages yet. It's time to banter.</p>
     )
-    const messageEls = messageTiles.length > 0 ? messageTiles : noMessages
+    const messageEls = allMessageTiles.length > 0 ? allMessageTiles : noMessages
 
     const senderEl = (
         <div className="Sender">

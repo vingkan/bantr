@@ -64,7 +64,10 @@ export default function MatchPage() {
     return (
         <div>
             <h2 className="PageTitle">suggestions for you</h2>
-            <div>{matchResults}</div>
+            <div className="MatchResults">{matchResults}</div>
+            <p className="ChangeProfileLink">
+              <Link to="/">{'< Change Room or Name'}</Link>
+            </p>
         </div>
     )
 }
