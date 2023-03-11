@@ -51,6 +51,10 @@ export default function MatchPage() {
         ...(userMap[uid]),
     }))
 
+    // useEffect(() => {
+    //   const messagesRef = ref(`chat`)
+    // })
+
     const matchTiles = allUsers.filter(user => user.uid !== uid).map((user) => (
         <MatchTile key={user.uid} myUid={uid} user={user} />
     ))

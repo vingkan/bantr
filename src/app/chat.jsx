@@ -12,6 +12,8 @@ import {
 
 import { useUser } from './user'
 
+const NO_LONGER_TYPING_DELAY_MS = 3000
+
 export const REACTIONS = {
     green_heart: '💚',
     soccer_ball: '⚽',
@@ -164,9 +166,14 @@ export function ChatApp(props) {
         }
         await push(chatRef, message)
         setContentText('')
+        const latestRef = ref(db, `live/${roomId}/${uid}/${otherUid}/latest`)
+        await set(latestRef, message)
     }
 
     const doSendReaction = async (fromUid, toUid, chatId, messageId, reactionId, shouldSet) => {
+        if (isViewOnly) {
+          return
+        }
         const reactionRef = ref(db, `reaction/${roomId}/${chatId}/${messageId}/${reactionId}`)
         if (shouldSet) {
             await set(reactionRef, {
@@ -190,6 +197,20 @@ export function ChatApp(props) {
         doSendReaction(uid, otherUid, chatId, messageId, reactionId, shouldSet)
     })
 
+    const setIsTyping = async (isTyping) => {
+        if (isViewOnly) {
+            return
+        }
+        const typingRef = ref(db, `live/${roomId}/${uid}/${otherUid}/typing`)
+        await set(typingRef, isTyping)
+        if (!isTyping) {
+            return
+        }
+        setTimeout(async () => {
+            await set(typingRef, false)
+        }, NO_LONGER_TYPING_DELAY_MS)
+    }
+
     const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/match'
 
     const messageTiles = chatMessages.map((message) => (
@@ -211,6 +232,8 @@ export function ChatApp(props) {
             <textarea
                 className="SendContent"
                 onChange={doUpdateContent}
+                onKeyPress={() => setIsTyping(true)}
+                onBlur={() => setIsTyping(false)}
                 value={contentText}
             />
             <button
@@ -227,7 +250,9 @@ export function ChatApp(props) {
             <h2 className="PageTitle TheirUserName">{theirName}</h2>
             <Link to={backLinkPath} className="BackLink">{'< Back'}</Link>
             <div className="Chat">
-                <div>{messageEls}</div>
+                <div className="ChatWrapper">
+                    <div>{messageEls}</div>
+                </div>
             </div>
             {!isViewOnly && senderEl}
         </div>

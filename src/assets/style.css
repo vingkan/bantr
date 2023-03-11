@@ -168,7 +168,7 @@ h3 {
 
 .BackLink {
     position: absolute;
-    margin-top: -1.75em;
+    margin-top: -4.25em;
     margin-left: 0.5em;
     color: black;
     text-decoration: none;
@@ -177,6 +177,9 @@ h3 {
 .Chat {
     height: calc(100vh - 13em);
     overflow: scroll;
+    /* https://stackoverflow.com/a/68874831 */
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .Sender {
