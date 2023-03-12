@@ -1,3 +1,4 @@
+/* localStorage */
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -130,6 +131,7 @@ export function useInboxData(db, roomId, myUid) {
 
 export function ChatApp(props) {
     const { roomId, chatId, uid, isViewOnly } = props
+    const savedChatKey = `bantr__chat__${chatId}`
     
     const db = getDatabase()
 
@@ -176,10 +178,12 @@ export function ChatApp(props) {
         })
     }, [])
 
-    const [contentText, setContentText] = useState()
+    const savedContent = localStorage.getItem(savedChatKey) || ''
+    const [contentText, setContentText] = useState(savedContent)
 
     const doUpdateContent = async (e) => {
         const content = e.target.value
+        localStorage.setItem(savedChatKey, content)
         setContentText(content)
     }
 
@@ -195,6 +199,7 @@ export function ChatApp(props) {
             content: contentText,
         }
         await push(chatRef, message)
+        localStorage.setItem(savedChatKey, '')
         setContentText('')
         const latestMyRef = ref(db, `live/${roomId}/${otherUid}/${uid}/latest`)
         await set(latestMyRef, message)
