@@ -12,7 +12,7 @@ import {
 
 import { useUser } from './user'
 
-const NO_LONGER_TYPING_DELAY_MS = 3000
+const NO_LONGER_TYPING_DELAY_MS = 2000
 
 export const REACTIONS = {
     green_heart: '💚',
@@ -96,6 +96,35 @@ function MessageTile({ myUid, from, sendReaction, content, reactions, isViewOnly
 function getOtherUid(chatId, myUid) {
     const [a, b] = chatId.split('~')
     return a === myUid ? b : a
+}
+
+export function useInboxData(db, roomId, myUid) {
+    const [userMap, setUserMap] = useState({})
+    
+    useEffect(() => {
+        const userMapRef = ref(db, `user/${roomId}`)
+        onValue(userMapRef, async (snap) => {
+            const userMapVal = snap.val() || {}
+            setUserMap(userMapVal)
+        })
+    }, [])
+
+    const allUsers = Object.keys(userMap).map((uid) => ({
+        uid,
+        ...(userMap[uid]),
+    })) || []
+
+    const [liveMap, setLiveMap] = useState({})
+
+    useEffect(() => {
+        const liveRef = ref(db, `live/${roomId}/${myUid}`)
+        onValue(liveRef, async (snap) => {
+            const liveRefVal = snap.val() || {}
+            setLiveMap(liveRefVal)
+        })
+    }, [roomId, myUid])
+
+    return { allUsers, liveMap }
 }
 
 export function ChatApp(props) {
@@ -228,7 +257,7 @@ export function ChatApp(props) {
     }, [roomId, uid, otherUid])
 
     const viewClass = isViewOnly ? 'ViewOnly' : 'LiveChat'
-    const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/match'
+    const backLinkPath = isViewOnly ? `/results?room=${roomId}` : '/chat'
 
     const isTypingEl = (
         <div key="typing" className="MessageTile TypingMessage">

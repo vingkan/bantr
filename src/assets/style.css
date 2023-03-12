@@ -142,6 +142,7 @@ h3 {
 .MatchTile h3 {
     line-height: 1.5em;
     font-size: 1.15em;
+    overflow: hidden;;
 }
 
 .MatchTile:hover {
@@ -178,6 +179,7 @@ h3 {
 
 .MatchTile .ChatIcon p {
     margin: 0.5em 0;
+    /* https://stackoverflow.com/a/13924997 */
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -186,8 +188,100 @@ h3 {
     -webkit-box-orient: vertical;
 }
 
-.ChangeProfileLink {
+.BottomLinks {
     padding: 0.5em;
+}
+
+.BottomLinks a {
+    display: inline-block;
+}
+
+.BottomLinks a:nth-child(2) {
+    float: right;
+}
+
+/* Inbox Page */
+
+.Inbox {
+    margin-top: 1em;
+}
+
+.Inbox h3 {
+    margin: 0.35em;
+    margin-top: 0.5em;
+    line-height: 1em;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.InboxChat {
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    margin-top: 0.5em;
+}
+
+.Inbox a:last-child .InboxChat {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.InboxChat.NoChats {
+    color: rgba(0, 0, 0, 0.5);
+    padding: 0.5em;
+}
+
+.InboxChat .Half {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0.5em;
+}
+
+.UserHalf {
+    width: calc(60% - 2em);
+    /* https://stackoverflow.com/a/13924997 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.UserHalf h4 {
+    color: var(--main-color);
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.MessageHalf {
+    width: calc(40% - 1em);
+    color: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.MessageHalf p {
+    margin: 0;
+    /* https://stackoverflow.com/a/13924997 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.ChatLight {
+    display: inline-block;
+    background: var(--accent-color);
+    margin-top: 0.5em;
+    margin-left: -0.25em;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    vertical-align: top;
+}
+
+.ChatLight.You {
+    display: none;
 }
 
 /* Chat Page */
@@ -201,7 +295,7 @@ h3 {
 }
 
 .Chat {
-    height: calc(100vh - 12.98em);
+    height: calc(100vh - 12.97em);
     overflow: scroll;
     /* https://stackoverflow.com/a/68874831 */
     display: flex;
@@ -338,18 +432,18 @@ h3 {
     position: relative;
     margin-top: -0.5em;
     height: 1em;
-    width: calc(75% + 2.125em);
+    width: calc(75% + 2em);
     text-align: right;
 }
 
 .Reactions .Reaction {
-    margin: 0 0.25em;
+    margin: 0 0.125em;
     font-size: 1.5em;
 }
 
 .MyMessage + .Reactions {
     text-align: left;
-    margin-left: calc(25% - 1.825em);
+    margin-left: calc(25% - 1.625em);
 }
 
 /* Results */
@@ -374,9 +468,15 @@ h3 {
 }
 
 @media (min-width: 75em) {
+
     .ScrollMessage {
         display: none;
     }
+
+    .UserResultWrapper {
+        overflow-x: hidden;
+    }
+
 }
 
 .UserResult .ResultBlock {
@@ -445,7 +545,7 @@ h3 {
 }
 
 .MatchPhoto:nth-child(2) {
-    margin-left: -4em;
+    margin-left: -2em;
     border-color: var(--accent-color);
 }
 

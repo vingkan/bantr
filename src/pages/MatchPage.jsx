@@ -1,5 +1,4 @@
 /* global localStorage */
-
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -11,7 +10,7 @@ import {
     ref,
 } from 'firebase/database'
 
-import { getChatId } from '../app/chat'
+import { getChatId, useInboxData } from '../app/chat'
 import { useUser } from '../app/user'
 
 const MS_TO_MINS = 1000 * 60
@@ -63,30 +62,7 @@ export default function MatchPage() {
     const user = useUser(db, roomId)
     const uid = user?.uid
 
-    const [userMap, setUserMap] = useState({})
-    
-    useEffect(() => {
-        const userMapRef = ref(db, `user/${roomId}`)
-        onValue(userMapRef, async (snap) => {
-            const userMapVal = snap.val() || {}
-            setUserMap(userMapVal)
-        })
-    }, [])
-
-    const allUsers = Object.keys(userMap).map((uid) => ({
-        uid,
-        ...(userMap[uid]),
-    }))
-
-    const [liveMap, setLiveMap] = useState({})
-
-    useEffect(() => {
-        const liveRef = ref(db, `live/${roomId}/${uid}`)
-        onValue(liveRef, async (snap) => {
-            const liveRefVal = snap.val() || {}
-            setLiveMap(liveRefVal)
-        })
-    }, [roomId, uid])
+    const { allUsers, liveMap } = useInboxData(db, roomId, uid)
 
     const matchTiles = allUsers.filter(user => user.uid !== uid).map((user) => (
         <MatchTile
@@ -103,8 +79,9 @@ export default function MatchPage() {
         <div>
             <h2 className="PageTitle">suggestions for you</h2>
             <div className="MatchResults">{matchResults}</div>
-            <p className="ChangeProfileLink">
-              <Link to="/">{'< Change Room or Name'}</Link>
+            <p className="BottomLinks">
+              <Link to="/">{'< Change Room/Name'}</Link>
+              <Link to="/chat">{'Chats >'}</Link>
             </p>
         </div>
     )

@@ -17,7 +17,9 @@ function getDeviceUser(user) {
         uid: deviceUid || user?.uid,
     }
     // Store result user ID to device
-    localStorage.setItem(USER_ID_KEY, deviceUser?.uid)
+    if (deviceUser?.uid) {
+        localStorage.setItem(USER_ID_KEY, deviceUser?.uid)
+    }
     return deviceUser
 }
 
