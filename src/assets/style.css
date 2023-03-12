@@ -76,11 +76,20 @@ h3 {
 
 .MyUserName, .TheirUserName {
     color: var(--main-color);
+    line-height: 1em;
 }
 
 .MyUserName {
+    font-size: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.TheirUserName {
+    font-size: 1.3em;
     margin-top: 0.25em;
-    line-height: 1.1em;
+    margin-bottom: 0.25em;
+
 }
 
 /* Home Page */
@@ -288,14 +297,14 @@ h3 {
 
 .BackLink {
     position: absolute;
-    margin-top: -4.25em;
+    margin-top: -3.5em;
     margin-left: 0.5em;
     color: black;
     text-decoration: none;
 }
 
 .Chat {
-    height: calc(100vh - 12.97em);
+    height: calc(100vh - 12.2em);
     overflow: scroll;
     /* https://stackoverflow.com/a/68874831 */
     display: flex;

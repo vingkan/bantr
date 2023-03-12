@@ -33,6 +33,15 @@ export const CHARACTERS = {
     },
     flo: {
         name: 'Flo \'Sassy\' Collins'
+    },
+    sharon: {
+        name: 'Dr. Sharon Fieldstone'
+    },
+    jane: {
+        name: 'Jane Payne'
+    },
+    bowen: {
+        name: 'Ms. Bowen'
     }
 }
 
