@@ -32,7 +32,7 @@ function countReactions(reactions) {
     }), {})
 }
 
-function formulaForLove(reactions) {
+function formulaForLove(reactions, messages) {
     const {
         positives,
         negatives,
@@ -48,7 +48,12 @@ function formulaForLove(reactions) {
         negatives: 0,
         total: 0,
     })
-    return positives - negatives
+    const countMessages = Object.keys(messages).length
+    if (countMessages > 0) {
+        return (positives - negatives) / countMessages
+    }
+    return 0
+    
 }
 
 function ReactionCount(props) {
@@ -94,6 +99,7 @@ function UserResult(props) {
     const userImageUrl = `/bantr/image/${props.character}.jpeg`
     const matchImageUrl = `/bantr/image/${matchUser.character}.jpeg`
     const viewPath = `/chat/view/${props.uid}/${matchUser.uid}?room=${roomId}`
+    const loveFactor = matchUser?.loveFactor?.toFixed(3) || 0
 
     return (
         <div className="UserResultWrapper">
@@ -107,7 +113,7 @@ function UserResult(props) {
                 </div>
                 <div className="ResultBlock MatchBlock">
                     <h3>{props.realName}'s #{loveIndex + 1} Match</h3>
-                    <p>Love Factor: {matchUser?.loveFactor}</p>
+                    <p>Love Factor: {loveFactor}</p>
                     <button onClick={decrementIndex}>{'<'}</button>
                     <div className="MatchPhotoPair">
                         
@@ -149,7 +155,7 @@ export default function ResultsPage() {
             const userMapVal = snap.val() || {}
             setUserMap(userMapVal)
         })
-    }, [])
+    }, [roomId])
 
     const allUsers = Object.keys(userMap).map((uid) => ({
         uid,
@@ -164,7 +170,17 @@ export default function ResultsPage() {
             const reactionMapVal = snap.val() || {}
             setReactionMap(reactionMapVal)
         })
-    }, [])
+    }, [roomId])
+
+    const [messageMap, setMessageMap] = useState({})
+
+    useEffect(() => {
+        const messageMapRef = ref(db, `chat/${roomId}`)
+        onValue(messageMapRef, async (snap) => {
+            const messageMapVal = snap.val() || {}
+            setMessageMap(messageMapVal)
+        })
+    }, [roomId])
 
     const usersWithLove = allUsers.map((currentUser) => {
         const matches = allUsers.map((otherUser) => {
@@ -174,7 +190,8 @@ export default function ResultsPage() {
             const chatReactions = flattenReactionMap(keyMap, roomId)
             const myReactions = chatReactions.filter(r => r.from === currentUser.uid)
             const theirReactions = chatReactions.filter(r => r.from === otherUser.uid)
-            const loveFactor = formulaForLove(myReactions)
+            const messages = messageMap?.[chatId] || {}
+            const loveFactor = formulaForLove(myReactions, messages)
             return {
                 ...otherUser,
                 loveFactor,
