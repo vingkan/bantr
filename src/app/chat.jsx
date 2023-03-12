@@ -269,6 +269,7 @@ export function ChatApp(props) {
                     <span className="TypingDot">.</span>
                 </p>
             </div>
+            <div className="MessageArrow"></div>
         </div>
     )
 
