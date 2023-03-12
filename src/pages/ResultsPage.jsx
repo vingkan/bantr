@@ -211,8 +211,9 @@ export default function ResultsPage() {
         return {
             ...currentUser,
             matches,
+            bestLoveFactor: matches?.[0]?.loveFactor || 0,
         }
-    })
+    }).sort((a, b) => b.bestLoveFactor - a.bestLoveFactor)
 
     const noResults = <p>No results yet.</p>
     const userResults = usersWithLove.map((u) => (
