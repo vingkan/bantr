@@ -87,6 +87,7 @@ function MessageTile({ myUid, from, sendReaction, content, reactions, isViewOnly
             <div className={`MessageBox ${authorClass}`}>
                 <ContentElement content={content} />
             </div>
+            <div className="MessageArrow"></div>
             {maybeReactions}
             {maybeReactionBar}
         </div>

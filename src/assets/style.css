@@ -398,7 +398,7 @@ h3 {
 .MessageBox {
     width: 75%;
     padding: 0.5em;
-    border-radius: 0.5em;
+    border-radius: 0.35em;
     color: white;
 }
 
@@ -411,6 +411,23 @@ h3 {
     margin-left: calc(25% - 1em);
     background: var(--main-color);
     border-bottom-right-radius: 0;
+}
+
+.MessageArrow {
+    --arrow-width: 0.75em;
+    --arrow-height: 1em;
+    width: 0; 
+    height: 0; 
+    border-left: calc(var(--arrow-width) / 2) solid transparent;
+    border-right: calc(var(--arrow-width) / 2) solid transparent;
+    border-top: calc(var(--arrow-height) / 2) solid var(--main-color);
+    position: relative;
+    left: calc(100% - var(--arrow-width));
+}
+
+.TheirMessage + .MessageArrow {
+    border-top-color: var(--accent-color);
+    left: 0;
 }
 
 /* Reactions */
@@ -427,6 +444,7 @@ h3 {
 
 .ReactionBar {
     display: none;
+    margin-top: -0.25em;
 }
 
 .MessageTile:hover .ReactionBar {
@@ -439,7 +457,7 @@ h3 {
 
 .Reactions {
     position: relative;
-    margin-top: -0.5em;
+    margin-top: -1em;
     height: 1em;
     width: calc(75% + 2em);
     text-align: right;
@@ -450,9 +468,9 @@ h3 {
     font-size: 1.5em;
 }
 
-.MyMessage + .Reactions {
+.MyMessage + .MessageArrow + .Reactions {
     text-align: left;
-    margin-left: calc(25% - 1.625em);
+    margin-left: calc(25% - 1.95em);
 }
 
 /* Results */
