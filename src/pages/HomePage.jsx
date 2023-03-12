@@ -94,6 +94,9 @@ export default function HomePage() {
     return (
         <div>
             <div className="Home Section">
+                <div className="Center">
+                    <p>A place where minds come to undress.</p>
+                </div>
                 <div className="UserNameForm Center">
                     <p>Room Code:</p>
                     <input type="text" value={roomCode} onChange={doRoomCodeChange} />

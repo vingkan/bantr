@@ -1,3 +1,3 @@
 # Bantr
 
-A fun Ted Lasso-style game.
+A place where minds come to undress.
