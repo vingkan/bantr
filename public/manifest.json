@@ -1,0 +1,19 @@
+{
+    "name": "Bantr",
+    "short_name": "Bantr",
+    "description": "No photos, just bantr.",
+    "theme_color": "#a6024b",
+    "background_color": "#a6024b",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/bantr",
+    "start_url": "/bantr",
+    "icons": [
+        {
+            "src": "/bantr/logo.png",
+            "type": "image/png",
+            "sizes": "128x128",
+            "purpose": "any maskable"
+        }
+    ]
+}
