@@ -302,7 +302,7 @@ export function ChatApp(props) {
             <textarea
                 className="SendContent"
                 onChange={doUpdateContent}
-                onKeyPress={() => setIsTyping(true)}
+                onKeyDown={() => setIsTyping(true)}
                 onBlur={() => setIsTyping(false)}
                 value={contentText}
             />
