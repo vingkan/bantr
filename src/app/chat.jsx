@@ -13,8 +13,6 @@ import {
 
 import { useUser } from './user'
 
-const NO_LONGER_TYPING_DELAY_MS = 2000
-
 export const REACTIONS = {
     green_heart: '💚',
     soccer_ball: '⚽',
@@ -129,6 +127,52 @@ export function useInboxData(db, roomId, myUid) {
     return { allUsers, liveMap }
 }
 
+const TYPING_EVENT_THROTTLE_MS = 3000
+const CHECK_NOT_TYPING_INTERAL_MS = 1000
+
+let lastEventTimestamp = 0
+let lastSentTimestamp = 0
+
+function getSetIsTyping({ db, isViewOnly, roomId, otherUid, uid }) {
+
+    const setIsTyping = async (isTyping) => {
+        if (isViewOnly) {
+            return
+        }
+        // Throttle is typing event if it was sent recently
+        const currentEventTimestamp = Date.now()
+        const nextEventMinTimestamp = lastSentTimestamp + TYPING_EVENT_THROTTLE_MS
+        lastEventTimestamp = currentEventTimestamp
+        // Do not throttle a blur event that ends typing
+        if (isTyping && currentEventTimestamp <= nextEventMinTimestamp) {
+            // Still typing
+            return
+        }
+        // Started typing
+        const typingRef = ref(db, `live/${roomId}/${otherUid}/${uid}/typing`)
+        lastSentTimestamp = currentEventTimestamp
+        await set(typingRef, isTyping)
+        if (!isTyping) {
+            return
+        }
+        // If blur event never comes, check on interval for end of typing
+        // Debounce to avoid ending typing too early
+        const interval = setInterval(async () => {
+            const now = Date.now()
+            const stoppedTypingMinTimestamp = lastEventTimestamp + TYPING_EVENT_THROTTLE_MS
+            if (now <= stoppedTypingMinTimestamp) {
+                // Still typing
+                return
+            }
+            // Stopped typing
+            await set(typingRef, false)
+            clearInterval(interval)
+        }, CHECK_NOT_TYPING_INTERAL_MS)
+    }
+
+    return setIsTyping
+}
+
 export function ChatApp(props) {
     const { roomId, chatId, uid, isViewOnly } = props
     const savedChatKey = `bantr__chat__${chatId}`
@@ -234,19 +278,7 @@ export function ChatApp(props) {
         doSendReaction(uid, otherUid, chatId, messageId, reactionId, shouldSet)
     })
 
-    const setIsTyping = async (isTyping) => {
-        if (isViewOnly) {
-            return
-        }
-        const typingRef = ref(db, `live/${roomId}/${otherUid}/${uid}/typing`)
-        await set(typingRef, isTyping)
-        if (!isTyping) {
-            return
-        }
-        setTimeout(async () => {
-            await set(typingRef, false)
-        }, NO_LONGER_TYPING_DELAY_MS)
-    }
+    const setIsTyping = getSetIsTyping({ db, isViewOnly, roomId, otherUid, uid })
 
     const [isOtherTyping, setIsOtherTyping] = useState(false)
 
