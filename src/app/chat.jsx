@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
     getDatabase,
+    onChildAdded,
     onValue,
     push,
     ref,
@@ -206,9 +207,12 @@ export function ChatApp(props) {
     const chatRef = ref(db, `chat/${roomId}/${chatId}`)
 
     useEffect(() => {
-        onValue(chatRef, async (snap) => {
+        onChildAdded(chatRef, async (snap) => {
             const chatVal = snap.val() || {}
-            setChatMap(chatVal)
+            setChatMap((prev) => ({
+                ...prev,
+                [snap.key]: chatVal,
+            }))
         })
     }, [])
 
