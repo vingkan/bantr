@@ -528,6 +528,14 @@ h3 {
     display: block;
 }
 
+.HideCharacter .MatchPhoto img {
+    display: none;
+}
+
+.HideCharacter .CharacterName {
+    opacity: 0;
+}
+
 .ScrollMessage {
     margin-top: 1em;
 }
@@ -602,6 +610,7 @@ h3 {
     border-radius: 50%;
     overflow: hidden;
     border: 0.3em solid var(--main-color);
+    background: var(--main-color);
 }
 
 .MatchPhoto img {
@@ -612,6 +621,7 @@ h3 {
 .MatchPhoto:nth-child(2) {
     margin-left: -2em;
     border-color: var(--accent-color);
+    background: var(--accent-color);
 }
 
 .ReactionCounts {

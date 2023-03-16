@@ -82,6 +82,11 @@ function ReactionCounts(props) {
 function UserResult(props) {
     const { roomId, matches } = props
     const [loveIndex, setLoveIndex] = useState(0)
+    const [showCharacter, setShowCharacter] = useState(false)
+
+    function toggleShow() {
+        setShowCharacter((prev) => !prev)
+    }
 
     function decrementIndex() {
         setLoveIndex((prev) => (prev === 0 ? matches.length - 1 : prev - 1))
@@ -100,14 +105,15 @@ function UserResult(props) {
     const matchImageUrl = `/bantr/image/${matchUser.character}.jpeg`
     const viewPath = `/chat/view/${props.uid}/${matchUser.uid}?room=${roomId}`
     const loveFactor = matchUser?.loveFactor?.toFixed(3) || 0
+    const showClass = showCharacter ? '' : 'HideCharacter'
 
     return (
         <div className="UserResultWrapper">
-            <div className="UserResult">
+            <div className={`UserResult ${showClass}`}>
                 <div className="ResultBlock UserBlock">
                     <h3>{props.realName}</h3>
                     <h4>{props.name}</h4>
-                    <h5>{userCharacter.name}</h5>
+                    <h5 className="CharacterName">{userCharacter.name}</h5>
                     <ReactionCounts reactions={matchUser.theirCounts} />
                     <p>Reactions Received</p>
                 </div>
@@ -115,15 +121,13 @@ function UserResult(props) {
                     <h3>{props.realName}'s #{loveIndex + 1} Match</h3>
                     <p>Love Factor: {loveFactor}</p>
                     <button onClick={decrementIndex}>{'<'}</button>
-                    <div className="MatchPhotoPair">
-                        
+                    <div className="MatchPhotoPair" onClick={toggleShow}>
                         <div className="MatchPhoto">
                             <img src={userImageUrl} alt={userCharacter.name} />
                         </div>
                         <div className="MatchPhoto">
                             <img src={matchImageUrl} alt={matchCharacter.name} />
                         </div>
-                        
                     </div>
                     <button onClick={incrementIndex}>{'>'}</button>
                     <p>
@@ -133,7 +137,7 @@ function UserResult(props) {
                 <div className="ResultBlock UserBlock">
                     <h3>{matchUser.realName}</h3>
                     <h4>{matchUser.name}</h4>
-                    <h5>{matchCharacter.name}</h5>
+                    <h5 className="CharacterName">{matchCharacter.name}</h5>
                     <ReactionCounts reactions={matchUser.myCounts} />
                     <p>Reactions Received</p>
                 </div>
@@ -225,6 +229,7 @@ export default function ResultsPage() {
             <div className="Section Center">
                 <h2>Results</h2>
                 <p className="ScrollMessage">Scroll horizontally to see each match.</p>
+                <p className="ScrollMessage">Click on a circle to reveal characters.</p>
                 <div className="AllUserResults">
                     {userResults.length > 0 ? userResults : noResults }
                 </div>
